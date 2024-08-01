@@ -1,0 +1,50 @@
+name: dbt PR Workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-dbt:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install dbt
+        run: |
+          python -m venv venv
+          .\venv\Scripts\activate
+          pip install dbt-core dbt-sqlserver
+
+      - name: Run dbt compile
+        run: |
+          .\venv\Scripts\activate
+          dbt compile
+
+      - name: Run the stored procedure
+        run: |
+          .\venv\Scripts\activate
+          sqlcmd -S your_server -d your_database -Q "EXEC get_orders"
+
+      - name: Run dbt tests
+        run: |
+          .\venv\Scripts\activate
+          dbt test --select orders_summary
+
+      - name: Check for test results
+        run: |
+          .\venv\Scripts\activate
+          result=$(dbt test --select orders_summary | grep 'PASS')
+          if [[ -z "$result" ]]; then
+            echo "Tests failed!"
+            exit 1
+          else
+            echo "Tests passed!"
+          fi
