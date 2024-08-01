@@ -1,0 +1,16 @@
+name: 'northwind_dbt_project'
+version: '1.0.0'
+config-version: 2
+
+profile: 'northwind_dbt_project'
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+analysis-paths: ["analyses"]
+snapshot-paths: ["snapshots"]
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_modules"

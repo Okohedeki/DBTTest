@@ -1,0 +1,2 @@
+ dbt run-operation run_insert_orders
+ https://stackoverflow.com/questions/72429050/new-to-dbt-and-trying-to-learn-how-to-execute-procedure-using-dbt-but-getting-er
